@@ -32,12 +32,12 @@
 ---
 
 ## Phase 4: Enterprise API Gateway (Java / Spring Boot)
-- [ ] Generate Maven build `services/java-gateway/pom.xml` with Spring Boot Web, Data JPA, and PostgreSQL driver.
-- [ ] Configure `services/java-gateway/src/main/resources/application.properties` with JDBC connection pooling.
-- [ ] Define JPA Entity `Inference.java` mapped to Supabase `live_inferences`.
-- [ ] Implement `InferenceRepository.java` with `findTop50ByOrderByCreatedAtDesc`.
-- [ ] Implement `InferenceController.java` with internal ingest endpoint and public CORS endpoint.
-- [ ] Construct multi-stage `services/java-gateway/Dockerfile` using Eclipse Temurin 17 JRE.
+- [x] Generate Maven build `services/java-gateway/pom.xml` with Spring Boot Web, Data JPA, and PostgreSQL driver.
+- [x] Configure `services/java-gateway/src/main/resources/application.properties` with JDBC connection pooling.
+- [x] Define JPA Entity `Inference.java` mapped to Supabase `live_inferences`.
+- [x] Implement `InferenceRepository.java` with `findTop50ByOrderByCreatedAtDesc`.
+- [x] Implement `InferenceController.java` with internal ingest endpoint and public CORS endpoint.
+- [x] Construct multi-stage `services/java-gateway/Dockerfile` using Eclipse Temurin 17 JRE.
 
 ---
 
