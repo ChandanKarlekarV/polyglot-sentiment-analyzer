@@ -13,11 +13,11 @@
 ---
 
 ## Phase 2: High-Speed Preprocessor (C++)
-- [ ] Implement `services/cpp-preprocessor/main.cpp` with O(N) string cleaning.
-- [ ] Integrate MongoDB C++ driver (`mongocxx` / `bsoncxx`) to persist raw unstructured text.
-- [ ] Integrate RabbitMQ C++ client (`SimpleAmqpClient`) to publish cleaned text to `cleaned_text_stream`.
-- [ ] Write `services/cpp-preprocessor/CMakeLists.txt` for driver linking.
-- [ ] Construct multi-stage `services/cpp-preprocessor/Dockerfile` with driver compilation.
+- [x] Implement `services/cpp-preprocessor/main.cpp` with O(N) string cleaning.
+- [x] Integrate MongoDB C++ driver (`mongocxx` / `bsoncxx`) to persist raw unstructured text.
+- [x] Integrate RabbitMQ C++ client (`SimpleAmqpClient`) to publish cleaned text to `cleaned_text_stream`.
+- [x] Write `services/cpp-preprocessor/CMakeLists.txt` for driver linking.
+- [x] Construct multi-stage `services/cpp-preprocessor/Dockerfile` with driver compilation.
 
 ---
 
