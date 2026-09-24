@@ -42,13 +42,13 @@
 ---
 
 ## Phase 5: The Frontend Dashboard (JavaScript / Next.js)
-- [ ] Build Next.js 14 application in `services/js-frontend/`.
-- [ ] Configure `tailwind.config.js` with custom ledger palette (`#141210`, `#1a1715`, `#3e3832`, `#ece8e1`, `#f9a826`).
-- [ ] Implement CSS-based subtle film grain overlay in `app/globals.css`.
-- [ ] Develop `app/page.jsx` with real-time polling to Java Gateway (`/api/inferences`).
-- [ ] Implement fallback mock data for visual demonstration when offline.
-- [ ] Add Author Dossier displaying candidate skills: Python, C, C++, Java, JS, SQL, MongoDB.
-- [ ] Construct `services/js-frontend/Dockerfile`.
+- [x] Build Next.js 14 application in `services/js-frontend/`.
+- [x] Configure `tailwind.config.js` with custom ledger palette (`#141210`, `#1a1715`, `#3e3832`, `#ece8e1`, `#f9a826`).
+- [x] Implement CSS-based subtle film grain overlay in `app/globals.css`.
+- [x] Develop `app/page.jsx` with real-time polling to Java Gateway (`/api/inferences`).
+- [x] Implement fallback mock data for visual demonstration when offline.
+- [x] Add Author Dossier displaying candidate skills: Python, C, C++, Java, JS, SQL, MongoDB.
+- [x] Construct `services/js-frontend/Dockerfile`.
 
 ---
 

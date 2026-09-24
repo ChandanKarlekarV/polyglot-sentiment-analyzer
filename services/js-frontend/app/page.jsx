@@ -54,7 +54,7 @@ export default function PolyglotDashboard() {
             </div>
             <h1 className="text-4xl font-serif text-ledger-text-main tracking-wide">Telemetry Journal & Service Ledger</h1>
             <p className="text-ledger-text-muted mt-2 font-mono text-sm">
-              Edge Gateway <span className="text-ledger-accent">Java v17</span> — gRPC — PyTorch Engine — C++ Ingestion
+              Edge Gateway <span className="text-ledger-accent">Java v17</span> — AMQP Stream — Scikit-Learn ML — C++ Ingestion
             </p>
           </div>
           
@@ -94,7 +94,7 @@ export default function PolyglotDashboard() {
             </div>
             
             <div className="mt-6 flex justify-between items-center border-t border-ledger-border pt-4">
-              <span className="font-mono text-xs text-ledger-text-muted">AI Model: <span className="text-ledger-text-main">PyTorch v2.3</span></span>
+              <span className="font-mono text-xs text-ledger-text-muted">AI Model: <span className="text-ledger-text-main">Scikit-Learn TF-IDF + LogReg</span></span>
               <button className="font-mono text-xs text-ledger-accent border border-ledger-accent px-4 py-2 hover:bg-ledger-accent hover:text-ledger-black transition-colors">
                 + Inject Live Telemetry
               </button>
