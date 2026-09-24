@@ -70,18 +70,6 @@ SUPABASE_KEY=[YOUR_SUPABASE_PASSWORD]
 Build the images and spin up the multi-container fabric:
 
 ```bash
-docker compose up --build -d
-```
-
-### 4. Access Points
-* **Frontend Dashboard:** `http://localhost:3000`
-* **Java API Gateway:** `http://localhost:8080/api/inferences`
-* **RabbitMQ Management:** `http://localhost:15672` (`admin` / `securepass123`)
-* **Python EDA Metrics:** `http://localhost:5000/api/internal/eda`
-
-> **Author Note:** This architecture prioritizes strict container boundaries. If any single node loses connection to the message broker or database, it is programmed to crash with an exit code 1, allowing the Docker daemon to automatically restart and heal the pipeline.
-
----
 
 ## 👨‍💻 Candidate Technical Profile
 
