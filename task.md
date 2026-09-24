@@ -22,12 +22,12 @@
 ---
 
 ## Phase 3: The AI Core (Python)
-- [ ] Implement `services/python-inference/main.py` using FastAPI and Pika.
-- [ ] Train startup TF-IDF Vectorizer + Logistic Regression classification pipeline.
-- [ ] Establish AMQP consumer listening on `cleaned_text_stream`.
-- [ ] Implement in-memory Pandas buffer for live Exploratory Data Analysis (`/api/internal/eda`).
-- [ ] Forward structured inferences to Java Gateway via HTTP POST.
-- [ ] Construct `services/python-inference/requirements.txt` and `Dockerfile`.
+- [x] Implement `services/python-inference/main.py` using FastAPI and Pika.
+- [x] Train startup TF-IDF Vectorizer + Logistic Regression classification pipeline.
+- [x] Establish AMQP consumer listening on `cleaned_text_stream`.
+- [x] Implement in-memory Pandas buffer for live Exploratory Data Analysis (`/api/internal/eda`).
+- [x] Forward structured inferences to Java Gateway via HTTP POST.
+- [x] Construct `services/python-inference/requirements.txt` and `Dockerfile`.
 
 ---
 
