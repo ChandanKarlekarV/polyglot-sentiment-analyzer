@@ -1,0 +1,67 @@
+**System Role:** You are an elite principal engineer specializing in polyglot microservices and distributed AI systems.
+
+**Task:** Generate the exact, production-ready source code for the [INSERT MICROSERVICE NAME] in [INSERT LANGUAGE].
+
+**Architecture Context:** 
+This service is a single node within a 13-language distributed AI pipeline. It must operate entirely independently in its own Docker container and communicate exclusively via standard protocols (REST/gRPC/AMQP) using JSON/Protobuf. 
+
+**Strict Constraints (Antigravity Rules):**
+1. **Zero External State:** The service must be completely stateless. All persistent data must be read from or written to the central Supabase PostgreSQL instance.
+2. **Hardcoded Boundaries:** Do not write code for any other service. Assume the API Gateway (Go) handles all authentication and rate limiting. 
+3. **Error Handling:** Implement explosive failure mechanisms. If the service loses connection to the message broker or database, it must crash and log the fatal error to `stdout` for the Docker daemon to catch.
+4. **Environment Variables:** All connections (DB_URL, BROKER_URL, PORT) must be injected via `.env`. No hardcoded credentials.
+
+**Frontend Identity & UI/UX Directives (STRICT - For Web Frontend / API Routing):**
+1. DO NOT use default Tailwind colors (no blue, indigo, or purple). You must use a custom palette of deep blacks, warm greys, earthy browns, and a golden-orange hex code for primary accents.
+2. The UI must look minimal and premium. Inject a CSS-based subtle film grain overlay to give the background a tactile, vintage diary aesthetic. 
+3. Use hard 1px borders for component separation. Do not use drop shadows.
+4. Use a Serif font for component headers, and a Monospace font for displaying the AI telemetry data.
+5. Provide animated interactive popups/modals for file change operations and live telemetry inspection.
+6. The foreground UI must look 100% human-crafted (vintage diary feel) while the background features an animated AI canvas.
+
+**Deliverables Required:**
+1. The primary source code file(s) with enterprise-grade comments.
+2. The `Dockerfile` specifically optimized for this language (e.g., multi-stage builds for compiled languages).
+3. `requirements.txt` / `Cargo.toml` / `package.json` / `go.mod` (dependency definition).
+
+**Output Format:** Output ONLY the raw code blocks. Do not explain the code unless explicitly asked.
+
+2. System Workflow (Data Lifecycle)
+Ingestion (Ruby): A cron job triggers the Ruby worker. It scrapes raw text data from target URLs, standardizes the encoding to UTF-8, and pushes the raw payload to a RabbitMQ/Kafka topic named raw_data_stream.
+
+Preprocessing (Rust): The Rust service listens to raw_data_stream. It instantly pulls the data, strips stop-words, performs heavy tokenization using multi-threading, and pushes the structured tensors/arrays to clean_data_stream.
+
+Training & Inference (Python):
+
+Training Phase: Python pulls from Supabase storage, runs PyTorch training, and saves the .pt or .onnx model back to Supabase.
+
+Inference Phase: Python listens to a gRPC channel for live prediction requests, runs the model, and returns the inference.
+
+Analysis (R): A scheduled R script pulls training logs from Supabase, generates statistical validation graphs (confusion matrices, ROC curves), and stores the static images in a Supabase Storage bucket.
+
+API Routing (Go): The Go API Gateway receives all client requests (from web or mobile). It validates JWT tokens, routes inference requests to Python via gRPC, and routes data-fetching requests to Supabase.
+
+Enterprise Webhook (Java): If the prediction crosses a certain confidence threshold, Java intercepts an event from the Go gateway and fires a formatted XML/JSON payload to a simulated external corporate endpoint.
+
+Client Delivery (TypeScript/Dart): The Next.js frontend (deployed via Vercel) and the Flutter mobile app consume the Go API Gateway to display live predictions, model accuracy graphs, and trigger new scraping jobs.
+
+3. Technical Research & Domain Justification
+Ruby (Ingestion): Nokogiri and Mechanize are unmatched for rapid DOM parsing and handling messy HTML. Ruby's expressive syntax makes writing resilient scrapers highly efficient.
+
+Rust (Preprocessing): Text tokenization for massive datasets is CPU-bound. Rust provides C-level speed and memory safety without garbage collection pauses, making it perfect for transforming gigabytes of strings into tensors.
+
+Python (AI Core): Non-negotiable for the core model. PyTorch and TensorFlow have C++ bindings under the hood, but the ecosystem and mathematical libraries (NumPy, Pandas) are exclusively centered around Python.
+
+R (Statistics): ggplot2 and caret offer statistical depth and visualization capabilities that Python's matplotlib struggles to match in a few lines of code. It acts as the mathematical auditor of the Python model.
+
+Go (API Gateway): Goroutines make Go the absolute best choice for a load balancer and API gateway. It handles thousands of concurrent socket connections with a microscopic memory footprint.
+
+Java (Enterprise Integration): Java EE / Spring Boot is the industry standard for SOAP/XML and rigid corporate webhooks. It enforces strict type safety for external B2B communications.
+
+SQL/Supabase (Database): Relational data mapping is required for tracking model versions, user requests, and accuracy metrics. Supabase provides out-of-the-box PostgreSQL with a powerful REST API and auth integration.
+
+TypeScript (Web): Next.js running on Vercel provides optimal edge-caching and static site generation for the dashboard, while TS ensures type safety matches the Go backend.
+
+Dart (Mobile): Flutter compiles to native ARM code for both iOS and Android, allowing a single codebase to interact with the Go API via WebSockets or REST.
+
+Bash (CI/CD CI/CD): Native Linux shell scripting remains the most universal way to orchestrate GitHub Actions, Docker Compose, and environment variables across 13 disparate build environments.

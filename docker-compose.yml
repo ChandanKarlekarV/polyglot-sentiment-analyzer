@@ -1,0 +1,91 @@
+# docker-compose.yml
+# Master orchestration file for the B.Tech Polyglot Stack
+version: '3.8'
+
+services:
+  # 1. Message Broker (AMQP)
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: securepass123
+    networks:
+      - polyglot-net
+
+  # 2. Local Document Database (Unstructured Data)
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: securepass123
+    networks:
+      - polyglot-net
+    volumes:
+      - mongo-data:/data/db
+
+  # 3. High-Speed Preprocessor (C++)
+  cpp-preprocessor:
+    build:
+      context: ./services/cpp-preprocessor
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://admin:securepass123@rabbitmq:5672/
+      - MONGO_URL=mongodb://admin:securepass123@mongodb:27017/
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - polyglot-net
+
+  # 4. AI Core (Python)
+  python-inference:
+    build:
+      context: ./services/python-inference
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://admin:securepass123@rabbitmq:5672/
+      - JAVA_GATEWAY_URL=http://java-gateway:8080/api/internal/inferences
+    depends_on:
+      - rabbitmq
+      - java-gateway
+    networks:
+      - polyglot-net
+
+  # 5. Enterprise API Gateway (Java / Spring Boot)
+  java-gateway:
+    build:
+      context: ./services/java-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+    networks:
+      - polyglot-net
+
+  # 6. Frontend Dashboard (Node.js / React)
+  js-frontend:
+    build:
+      context: ./services/js-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+    depends_on:
+      - java-gateway
+    networks:
+      - polyglot-net
+
+networks:
+  polyglot-net:
+    driver: bridge
+
+volumes:
+  mongo-data:

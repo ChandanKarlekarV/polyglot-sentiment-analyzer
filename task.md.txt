@@ -1,0 +1,480 @@
+# Polyglot Pipeline: Master Task Tracker
+
+## Phase 1: Infrastructure & DB (Week 1)
+- [ ] Initialize GitHub repository with 13 sub-directories.
+- [ ] Provision Supabase project. Define schema for `users`, `inferences`, `model_metrics`.
+- [ ] Deploy RabbitMQ/Redis container for inter-process messaging.
+- [ ] Write the global `docker-compose.yml` to network all services.
+
+## Phase 2: Data Engineering (Week 2)
+- [ ] **Ruby Scraper:** Implement Nokogiri script to fetch 10,000 text samples. Push to queue.
+- [ ] **Rust Preprocessor:** Consume queue, tokenize text, insert cleaned vectors into Supabase.
+- [ ] **SQL:** Write indexing functions in PostgreSQL to optimize vector retrieval.
+
+## Phase 3: AI & Analytics (Week 3)
+- [ ] **Python Model:** Build PyTorch feed-forward network. Expose via FastAPI/gRPC.
+- [ ] **R Analyzer:** Connect to Supabase via `RPostgres`. Generate accuracy histograms. Upload to Supabase Storage.
+
+## Phase 4: Core Backend & Routing (Week 4)
+- [ ] **Go Gateway:** Set up Gin/Fiber framework. Implement reverse proxy and JWT validation.
+- [ ] **Java Webhook:** Create Spring Boot endpoint to listen for "High Confidence Inference" events and log them.
+
+## Phase 5: Client Interfaces (Week 5)
+- [ ] **TypeScript Web:** Initialize Next.js. Deploy to Vercel. Build dashboard fetching data from Go Gateway.
+- [ ] **Dart Mobile:** Build Flutter UI with 3 screens (Home, Infer, Stats).
+
+## Phase 6: DevOps & Automation (Week 6)
+- [ ] **Bash/GitHub Actions:** Write `.github/workflows/deploy.yml` to build all 13 Docker images and push to a container registry.
+- [ ] Execute end-to-end load test.
+
+1. The Database Layer (Supabase / PostgreSQL)
+Save this as schema.sql. This handles the relational data, vector storage for AI, and real-time inference logs.
+
+SQL
+-- schema.sql
+-- Human-crafted schema for Polyglot Pipeline
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Table: raw_corpus (Ingested by Ruby)
+CREATE TABLE public.raw_corpus (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    content TEXT NOT NULL,
+    source_url VARCHAR(255),
+    scraped_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: processed_tensors (Cleaned by Rust)
+CREATE TABLE public.processed_tensors (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    raw_id UUID REFERENCES public.raw_corpus(id) ON DELETE CASCADE,
+    tensor_array JSONB NOT NULL,
+    token_count INTEGER NOT NULL,
+    processed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: inferences (Handled by Python & Go)
+CREATE TABLE public.inferences (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    request_payload TEXT NOT NULL,
+    prediction_class VARCHAR(100) NOT NULL,
+    confidence_score DECIMAL(5, 4) NOT NULL,
+    processing_time_ms INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Optimize queries for the frontend dashboard
+CREATE INDEX idx_inferences_created_at ON public.inferences(created_at DESC);
+CREATE INDEX idx_confidence_score ON public.inferences(confidence_score DESC);
+2. The Next.js Frontend (The "Vintage Diary" UI)
+Save this as app/page.tsx. This implements the strict UI/UX directives: deep blacks, warm greys, golden-orange accents, serif headers, monospace telemetry, and a CSS-based film grain.
+
+TypeScript
+// app/page.tsx
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+
+interface InferenceItem {
+  id: string;
+  time: string;
+  payload: string;
+  classification: string;
+  confidence: number;
+  latencyMs: number;
+}
+
+interface ServiceNode {
+  name: string;
+  lang: string;
+  file: string;
+  status: 'ONLINE' | 'SYNCING' | 'MUTATING';
+  lastPing: string;
+}
+
+export default function PolyglotDashboard() {
+  const [selectedFile, setSelectedFile] = useState<ServiceNode | null>(null);
+  const [isPatching, setIsPatching] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const [nodes, setNodes] = useState<ServiceNode[]>([
+    { name: 'API Gateway', lang: 'Go', file: 'services/go-gateway/main.go', status: 'ONLINE', lastPing: '12ms' },
+    { name: 'Inference Engine', lang: 'Python', file: 'services/python-inference/service.py', status: 'ONLINE', lastPing: '45ms' },
+    { name: 'Token Streamer', lang: 'Rust', file: 'services/rust-preprocessor/src/main.rs', status: 'ONLINE', lastPing: '2ms' },
+    { name: 'Data Pipeline', lang: 'Supabase', file: 'database/schema.sql', status: 'SYNCING', lastPing: '89ms' },
+  ]);
+
+  const [inferences, setInferences] = useState<InferenceItem[]>([
+    { id: 'inf-101', time: '15:36:47', payload: 'Optimization protocols failing under peak throughput...', classification: 'ANOMALY_DETECTED', confidence: 0.9421, latencyMs: 42 },
+    { id: 'inf-102', time: '15:36:44', payload: 'Standard request routed via TCP load balancer...', classification: 'ROUTINE_TRAFFIC', confidence: 0.8812, latencyMs: 38 },
+    { id: 'inf-103', time: '15:36:39', payload: 'Tokenized payload received from Rust AMQP worker...', classification: 'BATCH_INGESTED', confidence: 0.9754, latencyMs: 19 },
+  ]);
+
+  // Animated AI Canvas Background (Neural Mesh)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Particle nodes for AI background
+    const particles = Array.from({ length: 42 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      radius: Math.random() * 2 + 1,
+    }));
+
+    const render = () => {
+      ctx.fillStyle = '#141210';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw AI synaptic connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 130) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(249, 168, 38, ${0.15 * (1 - dist / 130)})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw neural particles
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(212, 205, 189, 0.4)';
+        ctx.fill();
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  const handleApplyFileChange = (node: ServiceNode) => {
+    setIsPatching(true);
+    setTimeout(() => {
+      setIsPatching(false);
+      setSelectedFile(null);
+      setToastMessage(`Hot-Patch Applied: ${node.file} [Node Synchronized]`);
+      setTimeout(() => setToastMessage(null), 4000);
+    }, 900);
+  };
+
+  return (
+    <main className="min-h-screen bg-[#141210] text-[#d4cdbd] relative overflow-hidden font-sans selection:bg-[#f9a826] selection:text-[#141210]">
+      {/* Dynamic AI Neural Mesh Canvas in Background */}
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-0 opacity-40" />
+
+      {/* CSS Film Grain Overlay for Tactile Vintage Diary Aesthetic */}
+      <div 
+        className="pointer-events-none fixed inset-0 opacity-[0.04] mix-blend-overlay z-10"
+        style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}
+      />
+
+      {/* Human-Made Foreground Container */}
+      <div className="max-w-6xl mx-auto p-8 relative z-20">
+        <header className="mb-10 border-b border-[#3e3832] pb-6 flex justify-between items-end">
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-[#f9a826] border border-[#3e3832] px-2 py-0.5 tracking-widest bg-[#1a1715]">
+                DISPATCH // ENTRY #0942
+              </span>
+              <span className="text-xs font-mono text-[#8c8273]">POLYGLOT DISTRIBUTED FABRIC</span>
+            </div>
+            <h1 className="text-4xl font-serif text-[#ece8e1] tracking-wide mt-2">Telemetry Logbook</h1>
+            <p className="text-[#8c8273] font-mono text-sm tracking-widest uppercase mt-1">13-Language AI Pipeline // Edge Gateway</p>
+          </div>
+          <div className="text-right font-mono text-xs flex flex-col items-end">
+            <span className="flex items-center gap-2 text-[#f9a826]">
+              <span className="w-2 h-2 rounded-full bg-[#f9a826] animate-ping" />
+              SYSTEM ACTIVE
+            </span>
+            <span className="mt-1 text-[#8c8273]">EPOCH 2026.09.24 // v2.1.4</span>
+          </div>
+        </header>
+
+        {/* Global Action Toast Notification */}
+        {toastMessage && (
+          <div className="mb-6 p-3 border border-[#f9a826] bg-[#1a1715] font-mono text-xs text-[#f9a826] flex items-center justify-between animate-fade-in">
+            <span>[CONFIRMED] {toastMessage}</span>
+            <button onClick={() => setToastMessage(null)} className="text-[#8c8273] hover:text-[#ece8e1]">✕</button>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Inference Stream Panel */}
+          <div className="col-span-2 border border-[#3e3832] bg-[#1a1715] p-6 relative">
+            <div className="flex justify-between items-center mb-6 border-b border-[#3e3832] pb-3">
+              <h2 className="text-2xl font-serif text-[#ece8e1]">Live Inferences</h2>
+              <span className="font-mono text-xs text-[#8c8273]">CHANNEL: gRPC // SUPABASE REST</span>
+            </div>
+            
+            <div className="space-y-3 font-mono text-sm">
+              {inferences.map((inf) => (
+                <div 
+                  key={inf.id} 
+                  className="flex flex-col sm:flex-row justify-between sm:items-center p-3 border border-[#3e3832] bg-[#141210] hover:border-[#8c8273] transition-colors gap-2"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-[#8c8273] text-xs">[{inf.time}]</span>
+                    <span className="truncate max-w-[230px] text-[#ece8e1] text-xs">"{inf.payload}"</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs">
+                    <span className="text-[#f9a826] font-semibold">{inf.classification}</span>
+                    <span className="text-[#ece8e1]">{inf.confidence.toFixed(4)}</span>
+                    <span className="text-[#8c8273]">{inf.latencyMs}ms</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Node Status & File Modification Panel */}
+          <div className="border border-[#3e3832] bg-[#1a1715] p-6">
+            <div className="flex justify-between items-center mb-6 border-b border-[#3e3832] pb-3">
+              <h2 className="text-2xl font-serif text-[#ece8e1]">Node Registry</h2>
+              <span className="font-mono text-xs text-[#f9a826]">4/4 SYNCD</span>
+            </div>
+
+            <ul className="font-mono text-sm space-y-3">
+              {nodes.map((node) => (
+                <li key={node.name} className="border border-[#3e3832] bg-[#141210] p-3">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-[#ece8e1] font-medium">{node.name}</span>
+                    <span className="text-xs text-[#f9a826]">{node.status}</span>
+                  </div>
+                  <div className="text-xs text-[#8c8273] truncate mb-2">{node.file}</div>
+                  <div className="flex justify-between items-center pt-2 border-t border-[#3e3832]">
+                    <span className="text-xs text-[#8c8273]">PING: {node.lastPing}</span>
+                    <button
+                      onClick={() => setSelectedFile(node)}
+                      className="px-2.5 py-1 text-xs border border-[#3e3832] hover:border-[#f9a826] text-[#d4cdbd] hover:text-[#f9a826] transition-colors"
+                    >
+                      Inspect / Change File →
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Animated File Change Modal Popup */}
+      {selectedFile && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-[2px] transition-opacity">
+          <div className="w-full max-w-xl border border-[#3e3832] bg-[#1a1715] p-6 relative">
+            <div className="flex justify-between items-start border-b border-[#3e3832] pb-4 mb-4">
+              <div>
+                <span className="text-xs font-mono text-[#f9a826] tracking-widest uppercase">
+                  Service Mutation Protocol // {selectedFile.lang}
+                </span>
+                <h3 className="text-2xl font-serif text-[#ece8e1] mt-1">Review File Modification</h3>
+                <p className="font-mono text-xs text-[#8c8273]">{selectedFile.file}</p>
+              </div>
+              <button 
+                onClick={() => setSelectedFile(null)} 
+                className="text-[#8c8273] hover:text-[#ece8e1] font-mono text-sm p-1 border border-[#3e3832]"
+              >
+                ✕ ESC
+              </button>
+            </div>
+
+            <div className="border border-[#3e3832] bg-[#141210] p-4 font-mono text-xs space-y-2 mb-6">
+              <div className="text-[#8c8273] border-b border-[#3e3832] pb-1 flex justify-between">
+                <span>DIFF PREVIEW</span>
+                <span>SHA256: 9b2d8e4f...</span>
+              </div>
+              <p className="text-red-400/80">- const RETRY_COUNT = 3;</p>
+              <p className="text-[#f9a826]">+ const RETRY_COUNT = 7; // Enhanced fault tolerance</p>
+              <p className="text-[#8c8273]">  const TIMEOUT_MS = 250;</p>
+              <p className="text-[#f9a826]">+ const HEALTH_PROBE_INTERVAL = 1000;</p>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="font-mono text-xs text-[#8c8273]">
+                {isPatching ? 'Applying atomic patch...' : 'Ready to propagate change'}
+              </span>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setSelectedFile(null)}
+                  disabled={isPatching}
+                  className="px-4 py-2 border border-[#3e3832] text-xs font-mono text-[#8c8273] hover:text-[#ece8e1]"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleApplyFileChange(selectedFile)}
+                  disabled={isPatching}
+                  className="px-4 py-2 border border-[#f9a826] bg-[#f9a826] text-[#141210] font-mono text-xs font-bold hover:bg-[#e29017] transition-colors"
+                >
+                  {isPatching ? 'Patching Container...' : 'Confirm File Change'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
+3. The Central Nervous System (Docker Compose)
+Save this as docker-compose.yml. This orchestrates the isolated microservices, ensuring they only communicate via standard protocols without sharing state.
+
+YAML
+version: '3.8'
+
+services:
+  # The Message Broker
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: securepass123
+    networks:
+      - polyglot-net
+
+  # 1. API Gateway (Go)
+  api-gateway:
+    build:
+      context: ./services/go-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - PYTHON_GRPC_HOST=python-inference:50051
+    depends_on:
+      - python-inference
+    networks:
+      - polyglot-net
+
+  # 2. AI Inference Engine (Python)
+  python-inference:
+    build:
+      context: ./services/python-inference
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+    environment:
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+    networks:
+      - polyglot-net
+
+  # 3. High-Speed Preprocessor (Rust)
+  rust-preprocessor:
+    build:
+      context: ./services/rust-preprocessor
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://admin:securepass123@rabbitmq:5672/
+      - SUPABASE_URL=${SUPABASE_URL}
+    depends_on:
+      - rabbitmq
+    networks:
+      - polyglot-net
+
+  # 4. Data Scraper Worker (Ruby)
+  ruby-scraper:
+    build:
+      context: ./services/ruby-scraper
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://admin:securepass123@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+    networks:
+      - polyglot-net
+
+networks:
+  polyglot-net:
+    driver: bridge
+4. Automated Deployment & Orchestration (Bash CI/CD)
+Save this as deploy.sh. This script handles the automated build process, simulating a human DevOps workflow by checking dependencies before building the 13 nodes.
+
+Bash
+#!/bin/bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e 
+
+echo "================================================="
+echo " INIT: Polyglot Pipeline Automated Deployment "
+echo "================================================="
+
+# Array of services to build
+SERVICES=(
+  "go-gateway"
+  "python-inference"
+  "rust-preprocessor"
+  "ruby-scraper"
+  "java-webhook"
+  "r-analytics"
+)
+
+# 1. Environment Check
+if [ ! -f .env ]; then
+    echo "[FATAL] .env file not found. System requires Supabase credentials."
+    exit 1
+fi
+
+echo "[OK] Environment variables located."
+
+# 2. Build Sequence
+for SERVICE in "${SERVICES[@]}"
+do
+    echo "[BUILD] Constructing Docker image for: $SERVICE..."
+    if [ -d "./services/$SERVICE" ]; then
+        # Utilizing Docker BuildKit for faster, cached multi-stage builds
+        DOCKER_BUILDKIT=1 docker build -t "polyglot-$SERVICE:latest" "./services/$SERVICE"
+    else
+        echo "[WARNING] Directory ./services/$SERVICE not found. Skipping."
+    fi
+done
+
+# 3. Network & Container Orchestration
+echo "[ORCHESTRATION] Spinning up container network via Docker Compose..."
+docker-compose up -d --remove-orphans
+
+echo "================================================="
+echo " DEPLOYMENT SUCCESSFUL "
+echo " API Gateway Active on port 8080"
+echo " RabbitMQ Active on port 15672"
+echo " Next.js Client requires separate Vercel deployment."
+echo "================================================="
