@@ -53,7 +53,7 @@
 ---
 
 ## Phase 6: DevOps and Presentation
-- [ ] Write flagship `README.md` with architectural diagrams and recruiter interview talking points.
-- [ ] Write automated `deploy.sh` script for local Docker Compose execution.
-- [ ] Push clean codebase to GitHub repository `ChandanKarlekarV/polyglot-sentiment-analyzer`.
-- [ ] Configure Vercel deployment pipeline for `services/js-frontend`.
+- [x] Write flagship `README.md` with architectural diagrams and recruiter interview talking points.
+- [x] Write automated `deploy.sh` script for local Docker Compose execution.
+- [x] Push clean codebase to GitHub repository `ChandanKarlekarV/polyglot-sentiment-analyzer`.
+- [x] Configure Vercel deployment pipeline for `services/js-frontend`.

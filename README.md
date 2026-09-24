@@ -67,9 +67,51 @@ SUPABASE_KEY=[YOUR_SUPABASE_PASSWORD]
 ```
 
 ### 3. Build & Launch
-Build the images and spin up the multi-container fabric:
+Build the container images and launch the multi-service fabric:
 
 ```bash
+docker compose build
+docker compose up -d
+```
+
+### 4. Service Endpoints
+* **Vintage Ledger Frontend:** [http://localhost:3000](http://localhost:3000)
+* **Java Enterprise Gateway:** [http://localhost:8080/api/inferences](http://localhost:8080/api/inferences)
+* **Python AI Core (Live EDA):** [http://localhost:5000/api/internal/eda](http://localhost:5000/api/internal/eda)
+* **RabbitMQ Management Dashboard:** [http://localhost:15672](http://localhost:15672) *(Credentials: admin / securepass123)*
+* **MongoDB Ingestion Store:** `mongodb://admin:securepass123@localhost:27017`
+
+---
+
+## 🚀 Vercel Deployment Guide (`services/js-frontend`)
+
+To deploy the frontend to Vercel while backed by the GitHub repository:
+
+1. **Log in to Vercel:** Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
+2. **Import Repository:** Select `ChandanKarlekarV/polyglot-sentiment-analyzer`.
+3. **Configure Project Settings:**
+   * **Framework Preset:** `Next.js`
+   * **Root Directory:** Edit and set to `services/js-frontend`.
+4. **Environment Variables:**
+   * Add `NEXT_PUBLIC_API_URL` with your public Gateway URL (e.g. `https://your-java-gateway-url/api` or leave blank for automatic graceful fallback to demonstration telemetry).
+5. **Deploy:** Click **"Deploy"**. Vercel will build and host the vintage diary dashboard on a global edge CDN.
+
+---
+
+## 🎯 Recruiter & Technical Interview Talking Points
+
+* **Language Specialization vs. Monolithic Convenience:**
+  * *"Why C++ for text normalization?"* C++ executes raw ASCII/UTF-8 character-level sanitization in $O(N)$ time with pre-allocated memory buffers (`std::string::reserve`), avoiding garbage collection latency spikes on high-volume streams.
+  * *"Why Python for AI?"* Python hosts the richest data science and machine learning ecosystem (`pandas`, `scikit-learn`), enabling rapid feature extraction (TF-IDF) and fast vector mathematics.
+  * *"Why Java / Spring Boot for the API Gateway?"* Spring Boot provides battle-tested JDBC connection pooling (HikariCP), strong type safety, and transactional consistency for high-concurrency enterprise data ingestion.
+* **Dual-Database Architecture Rationale:**
+  * Unstructured, schema-less raw scraped strings are permanently archived in **MongoDB** (`raw_corpus`), ensuring no incoming data is lost even if parsing rules evolve.
+  * Structured predictions, confidence scores, and latency metrics are strictly persisted in **Supabase PostgreSQL** (`live_inferences`), optimized with B-tree indices for fast analytical slicing and frontend queries.
+* **Resilience & Fault Tolerance:**
+  * Microservices communicate asynchronously via durable RabbitMQ queues (`cleaned_text_stream`). If the AI service experiences temporary downtime, the C++ ingestion layer buffers messages without data loss.
+  * Critical services follow a fail-fast design: unrecoverable broker or database disconnects trigger immediate exit code `1`, allowing Docker Compose or Kubernetes orchestrators to automatically restart healthy containers.
+
+---
 
 ## 👨‍💻 Candidate Technical Profile
 
@@ -83,3 +125,4 @@ Build the images and spin up the multi-container fabric:
 │ AI & ML (In Progress) │ Data Preprocessing, Basic Algorithms, EDA, ML models  │
 └───────────────────────┴───────────────────────────────────────────────────────┘
 ```
+

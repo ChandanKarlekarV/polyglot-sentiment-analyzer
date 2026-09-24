@@ -38,8 +38,8 @@ docker compose ps
 
 echo "=================================================================="
 echo " DEPLOYMENT COMPLETE                                              "
-echo " Go API Gateway:   http://localhost:8080/health                   "
-echo " Live Inferences:  http://localhost:8080/api/v1/inferences        "
+echo " Java API Gateway: http://localhost:8080/api/inferences           "
+echo " Python AI EDA:    http://localhost:5000/api/internal/eda          "
 echo " RabbitMQ UI:      http://localhost:15672 (admin/securepass123)   "
-echo " Frontend Dev:     cd frontend && npm install && npm run dev      "
+echo " Frontend UI:      http://localhost:3000                          "
 echo "=================================================================="
