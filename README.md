@@ -2,14 +2,15 @@
 
 <div align="center">
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-success?style=for-the-badge&logo=vercel)](https://js-frontend-tau.vercel.app)
 [![Microservices Architecture](https://img.shields.io/badge/Architecture-Event--Driven%20Microservices-blue.svg?style=for-the-badge)](#-system-architecture)
 [![Tech Stack](https://img.shields.io/badge/Stack-C%2B%2B17%20%7C%20Python%20%7C%20Java%2017%20%7C%20Next.js-orange.svg?style=for-the-badge)](#-technology-matrix--domain-separation)
 [![Dual Database](https://img.shields.io/badge/Storage-MongoDB%20%2B%20Supabase%20PostgreSQL-green.svg?style=for-the-badge)](#-dual-database-persistence)
-[![Deployment](https://img.shields.io/badge/Deploy-Docker%20%2B%20Vercel-black.svg?style=for-the-badge)](#-deployment-guide)
+[![Deployment](https://img.shields.io/badge/Deploy-Docker%20%2B%20Vercel-black.svg?style=for-the-badge)](#-vercel-deployment)
 
 **An enterprise-grade, distributed real-time sentiment analysis engine orchestrating multi-language microservices over AMQP message brokers, dual-tier persistence, and a high-fidelity edge telemetry dashboard.**
 
-[System Architecture](#-system-architecture) • [Technology Matrix](#-technology-matrix--domain-separation) • [API & Event Contracts](#-api--event-contracts) • [Local Orchestration](#-local-orchestration) • [Vercel Deployment](#-vercel-deployment) • [Technical Dossier](#-candidate-technical-dossier)
+[Live Production Demo](https://js-frontend-tau.vercel.app) • [System Architecture](#-system-architecture) • [Technology Matrix](#-technology-matrix--domain-separation) • [API & Event Contracts](#-api--event-contracts) • [Local Orchestration](#-local-orchestration) • [Vercel Deployment](#-vercel-deployment) • [Technical Dossier](#-candidate-technical-dossier)
 
 </div>
 
@@ -187,7 +188,10 @@ docker compose up -d
 
 ## 🚀 Vercel Deployment
 
-The frontend dashboard (`services/js-frontend`) is structured as an independent Next.js project optimized for edge deployment on Vercel.
+* **Live Production Edge Deployment:** [https://js-frontend-tau.vercel.app](https://js-frontend-tau.vercel.app)
+* **Vercel Project Dashboard:** [https://vercel.com/ck21-3410/js-frontend](https://vercel.com/ck21-3410/js-frontend)
+
+The frontend dashboard (`services/js-frontend`) is connected directly to this repository and configured for edge delivery via Vercel.
 
 ### Continuous Deployment via Git
 1. Log in to [Vercel](https://vercel.com) and click **"Add New Project"**.
